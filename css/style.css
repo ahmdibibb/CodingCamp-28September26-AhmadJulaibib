@@ -1,0 +1,593 @@
+/* =========================================================
+   Expense Budget Visualizer — Mobile-First Stylesheet
+   Base styles target 320px+; breakpoint at 768px for wider layouts
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   CSS Custom Properties (Design Tokens)
+   --------------------------------------------------------- */
+:root {
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-border: #dde1e7;
+  --color-primary: #4361ee;
+  --color-primary-hover: #3451d1;
+  --color-secondary: #6c757d;
+  --color-secondary-hover: #565e64;
+  --color-danger: #e63946;
+  --color-danger-hover: #c1121f;
+  --color-success: #2dc653;
+  --color-text: #1a1a2e;
+  --color-text-muted: #6b7280;
+  --color-error-bg: #fff0f0;
+  --color-error-text: #c1121f;
+  --color-error-border: #e63946;
+  --color-highlight-bg: #fff3cd;  /* visually distinct from default row */
+  --color-highlight-border: #ffc107;
+
+  --font-size-body: 14px;         /* ≥14px requirement */
+  --font-size-balance: 22px;      /* ≥18px requirement */
+  --font-size-label: 14px;
+  --font-size-small: 13px;
+  --font-size-h1: 20px;
+  --font-size-h2: 16px;
+
+  --tap-target: 44px;             /* minimum 44×44px tap target */
+  --border-radius: 8px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+/* ---------------------------------------------------------
+   Reset & Base
+   --------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Prevent horizontal overflow at all viewport widths */
+  overflow-x: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+img, canvas, svg {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------------------------------------------------------
+   App Container
+   --------------------------------------------------------- */
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+/* ---------------------------------------------------------
+   App Header
+   --------------------------------------------------------- */
+.app-header {
+  text-align: center;
+  padding: var(--spacing-md) 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.app-title {
+  font-size: var(--font-size-h1);
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------
+   Sections
+   --------------------------------------------------------- */
+.balance-section,
+.form-section,
+.spending-limit-section,
+.view-toggle-section,
+.list-section,
+.monthly-section,
+.chart-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  /* Prevent internal elements from overflowing */
+  overflow: hidden;
+}
+
+.section-title {
+  font-size: var(--font-size-h2);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+}
+
+/* ---------------------------------------------------------
+   Balance Display  (≥18px required)
+   --------------------------------------------------------- */
+.balance-section {
+  text-align: center;
+}
+
+.balance-label {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xs);
+}
+
+#balance-display {
+  font-size: var(--font-size-balance); /* 22px — satisfies ≥18px */
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ---------------------------------------------------------
+   Form Elements  (tap target ≥44px on mobile)
+   --------------------------------------------------------- */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+label {
+  display: block;
+  font-size: var(--font-size-label);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  display: block;
+  width: 100%;
+  /* Minimum height satisfies 44px tap-target requirement */
+  min-height: var(--tap-target);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-body);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+/* Prevent number spinners from reducing usable area */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------
+   Buttons  (tap target ≥44px on mobile)
+   --------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Minimum dimensions for 44×44 tap target */
+  min-height: var(--tap-target);
+  min-width: var(--tap-target);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: var(--font-size-body);
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  width: 100%;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-primary-hover);
+  outline: none;
+}
+
+.btn-primary:focus-visible {
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.4);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: #ffffff;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: var(--color-secondary-hover);
+  outline: none;
+}
+
+.btn-secondary:focus-visible {
+  box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.4);
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+  background-color: var(--color-danger-hover);
+  outline: none;
+}
+
+.btn-danger:focus-visible {
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.4);
+}
+
+/* ---------------------------------------------------------
+   Form Errors / Inline Errors
+   --------------------------------------------------------- */
+#form-errors,
+#spending-limit-error {
+  font-size: var(--font-size-small);
+  color: var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Hidden when empty (no content) */
+#form-errors:empty,
+#spending-limit-error:empty {
+  display: none;
+}
+
+#form-errors ul,
+#spending-limit-error ul {
+  padding-left: var(--spacing-md);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------
+   App Error Banner
+   --------------------------------------------------------- */
+#app-error {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-danger);
+  color: #ffffff;
+  font-size: var(--font-size-body);
+  font-weight: 500;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  width: 100%;
+}
+
+#app-error[hidden] {
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   Spending Limit Controls
+   --------------------------------------------------------- */
+.spending-limit-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  align-items: flex-end;
+}
+
+.spending-limit-controls label {
+  flex: 0 0 100%;
+  margin-bottom: 0;
+}
+
+.spending-limit-controls input {
+  flex: 1 1 140px;
+}
+
+.spending-limit-controls .btn {
+  flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------
+   View Toggle
+   --------------------------------------------------------- */
+.view-toggle-section {
+  display: flex;
+  justify-content: center;
+}
+
+#btn-toggle-view {
+  width: 100%;
+}
+
+/* ---------------------------------------------------------
+   Sort Controls
+   --------------------------------------------------------- */
+.sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.sort-controls label {
+  margin-bottom: 0;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+#sort-criterion {
+  flex: 1 1 180px;
+}
+
+/* ---------------------------------------------------------
+   Transaction List
+   --------------------------------------------------------- */
+#transaction-list {
+  /* Scrollable when list grows long */
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body);
+  padding: var(--spacing-lg) 0;
+}
+
+/* Transaction card */
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  transition: background-color 0.2s ease;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-info {
+  flex: 1 1 auto;
+  min-width: 0; /* allow text truncation */
+}
+
+.transaction-name {
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.transaction-amount {
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  color: var(--color-danger);
+  white-space: nowrap;
+}
+
+.category-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px var(--spacing-sm);
+  border-radius: 100px;
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.btn-delete {
+  flex: 0 0 auto;
+  min-height: var(--tap-target);
+  min-width: var(--tap-target);
+  padding: 0;
+  background-color: transparent;
+  color: var(--color-danger);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error-border);
+  outline: none;
+}
+
+.btn-delete:focus-visible {
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+}
+
+/* ---------------------------------------------------------
+   Highlight class — spending limit exceeded
+   Background is visually distinct from default row (#ffffff)
+   --------------------------------------------------------- */
+.transaction-item.highlight {
+  background-color: var(--color-highlight-bg);
+  border-left: 4px solid var(--color-highlight-border);
+}
+
+/* ---------------------------------------------------------
+   Monthly Summary
+   --------------------------------------------------------- */
+.monthly-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-body);
+}
+
+.monthly-row:last-child {
+  border-bottom: none;
+}
+
+.monthly-label {
+  font-weight: 600;
+}
+
+.monthly-total {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------
+   Chart Section
+   --------------------------------------------------------- */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+#spending-chart {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.chart-placeholder {
+  display: none;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body);
+  padding: var(--spacing-xl) 0;
+}
+
+/* Show placeholder when chart has no data (toggled by JS) */
+.chart-placeholder.visible {
+  display: block;
+}
+
+/* =========================================================
+   Media Query — 768px+ (wider / tablet / desktop layouts)
+   ========================================================= */
+@media (min-width: 768px) {
+  .app-container {
+    padding: var(--spacing-xl);
+    max-width: 900px;
+  }
+
+  .app-title {
+    font-size: 26px;
+  }
+
+  /* Two-column layout for form + chart side by side */
+  .two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  /* Wider balance display */
+  #balance-display {
+    font-size: 28px;
+  }
+
+  /* Transaction list can grow taller on wider screens */
+  #transaction-list {
+    max-height: 520px;
+  }
+
+  /* Chart can be larger */
+  .chart-wrapper {
+    max-width: 360px;
+  }
+
+  /* Spending limit controls in one row on wider screens */
+  .spending-limit-controls label {
+    flex: 0 0 auto;
+  }
+
+  /* Sort controls always inline on wider screens */
+  .sort-controls {
+    flex-wrap: nowrap;
+  }
+}
+
+/* =========================================================
+   Accessibility: respect reduced motion preference
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
